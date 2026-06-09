@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر عبيده عامر للبرامج - الصفحة الرئيسية</title>
+    <!-- Tailwind CSS للمظهر العصري المتجاوب -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Cairo', sans-serif; scroll-behavior: smooth; margin: 0; padding: 0; background-color: #0f172a; color: #f1f5f9; }
+        
+        /* تأثير الظهور عند التمرير */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* تأثير التوهج للبطاقات (Glow Effect) */
+        .glow-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #1e293b;
+        }
+        .glow-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(249, 115, 22, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(249, 115, 22, 0.1);
+        }
+
+        /* Custom scrollbar for a sleek look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; } /* slate-900 */
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; } /* indigo-600 */
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; } /* indigo-500 */
+
+        /* الأنميشن الخاص بالتعليقات */
+        .comment-fade-in { animation: slideUp 0.5s ease-out forwards; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .shrink-out { animation: shrink 0.4s ease-in forwards; pointer-events: none; }
+        @keyframes shrink {
+            0% { transform: scale(1); opacity: 1; background-color: rgba(239, 68, 68, 0.1); }
+            100% { transform: scale(0.8); opacity: 0; height: 0; margin: 0; padding: 0; }
+        }
+
+        /* Spinner CSS */
+        .loader {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #f97316;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Toast Notification */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 100; }
+        .toast {
+            background: #1e293b;
+            border-right: 4px solid #f97316;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideInLeft 0.3s ease-out;
+        }
+        @keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+
+        /* تنسيق التبويبات النشطة */
+        .tab-btn.active-tab {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6); /* بنفسجي إلى أزرق فخم */
+            color: white !important;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Amazon-like Header -->
+    <header class="bg-gray-900 text-white p-3 sticky top-0 z-50 shadow-md">
+        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+            <!-- Logo and Mobile Store Button (Row 1 on Mobile) -->
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <div class="flex items-center gap-2">
+                    <a href="index.htm" class="text-xl font-black text-orange-400">متجر عبيده عامر</a>
+                    <span class="text-xs text-gray-400">للبرامج</span>
+                </div>
+                <!-- Store Button: Visible on Mobile only -->
+                <div class="md:hidden">
+                    <button onclick="window.location.reload()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-xs font-bold transition">
+                        <i class="fa-solid fa-store ml-1"></i> المتجر
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar (Row 2 on Mobile) -->
+            <div class="w-full md:flex-grow md:max-w-2xl md:mx-4">
+                <div class="relative flex items-center">
+                    <input type="text" id="search-input" onkeyup="searchApps()" placeholder="ابحث عن برامج، أدوات، والمزيد..." class="w-full bg-white text-gray-900 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm pl-10">
+                    <button class="absolute left-0 top-0 h-full px-3 flex items-center justify-center text-gray-600 hover:text-orange-500 transition">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Store Button (Visible on Desktop only) -->
+            <div class="hidden md:flex items-center">
+                <button onclick="window.location.reload()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-xs font-bold transition">
+                    <i class="fa-solid fa-store ml-1"></i> المتجر
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation (below header) -->
+    <nav class="bg-gray-800 text-white border-b border-slate-700 sticky top-[64px] z-40 shadow-lg">
+        <div class="max-w-screen-xl mx-auto flex items-center justify-between p-1">
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-2">
+                <button onclick="switchMainTab('برامج وتطبيقات الكمبيوتر', this)" class="tab-btn active-tab px-5 py-2.5 rounded-lg font-bold text-xs transition-all flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-laptop-code"></i> برامج وتطبيقات الكمبيوتر
+                </button>
+                <button onclick="switchMainTab('أنظمة تشغيل الكمبيوتر', this)" class="tab-btn text-slate-400 hover:text-white px-5 py-2.5 rounded-lg font-bold text-xs transition-all flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-compact-disc"></i> أنظمة تشغيل الكمبيوتر
+                </button>
+                <button onclick="switchMainTab('تعاريف الحاسوب', this)" class="tab-btn text-slate-400 hover:text-white px-5 py-2.5 rounded-lg font-bold text-xs transition-all flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-gears"></i> تعاريف الحاسوب
+                </button>
+            </div>
+            <div id="nav-auth-container" class="hidden md:flex items-center border-r border-slate-700 pr-6 mr-2">
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 bg-slate-900">
+        <!-- Hero/Banner Section -->
+        <section class="bg-gradient-to-b from-slate-900 to-slate-800 text-white py-16 px-4 text-center reveal">
+            <div class="max-w-screen-xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">اكتشف عالم البرامج الاحترافية</h2>
+                <p class="text-lg md:text-xl text-blue-200 mb-8">كل ماتحتاجه من برامج بعد الفورمات في مكان واحد</p>
+                <a href="#product-grid-section" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 shadow-lg">
+                    تصفح البرامج الآن <i class="fa-solid fa-arrow-left mr-2"></i>
+                </a>
+            </div>
+        </section>
+
+    <!-- لوحة تحكم المدير (تظهر فقط عند تسجيل دخول الأدمن) --> 
+    <div id="admin-panel-overlay" class="max-w-screen-xl mx-auto px-4 mt-8 hidden">
+        <section id="admin-dashboard-section" class="bg-slate-800 border-2 border-orange-500/30 rounded-2xl p-6 mb-8 reveal active">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-black text-orange-500 flex items-center gap-2">
+                    <i class="fa-solid fa-gauge-high"></i> لوحة تحكم المدير - إضافة برنامج جديد
+                </h3>
+                <button onclick="toggleAdminDashboard()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-circle-chevron-up"></i> إخفاء</button>
+            </div>
+            <form onsubmit="publishNewApp(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <input type="text" id="app-name" placeholder="اسم البرنامج" required class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                <select id="app-category" class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                    <option value="برامج وتطبيقات الكمبيوتر">برامج وتطبيقات الكمبيوتر</option>
+                    <option value="أنظمة تشغيل الكمبيوتر">أنظمة تشغيل الكمبيوتر</option>
+                    <option value="تعاريف الحاسوب">تعاريف الحاسوب</option>
+                </select>
+                <input type="text" id="app-size" placeholder="الحجم (مثال: 50 MB)" required class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                <input type="text" id="app-version" placeholder="الإصدار (مثال: v2.0)" required class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                <input type="url" id="app-link" placeholder="رابط التحميل المباشر" required class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                <input type="url" id="app-icon" placeholder="رابط أيقونة البرنامج (URL)" class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                <textarea id="app-desc" placeholder="وصف مختصر للبرنامج ومميزاته..." required class="md:col-span-2 lg:col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500 h-24"></textarea>
+                <div class="lg:col-start-3">
+                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> نشر البرنامج في المتجر
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+        <div class="max-w-screen-xl mx-auto px-4 py-8 md:py-12 space-y-12">
+            <!-- All Products Grid -->
+            <section id="product-grid-section" class="space-y-6 reveal">
+                <h3 id="current-category-title" class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-th-large text-blue-600"></i> جميع البرامج
+                </h3>
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- يتم توليد كروت البرامج تلقائياً -->
+                </div>
+            </section>
+
+            <!-- قسم التعليقات والمراجعات -->
+            <section id="comments-section" class="pt-12 border-t border-slate-800 reveal">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <!-- نموذج إضافة تعليق -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-comment-dots text-orange-500"></i> أضف رأيك بالمتجر
+                        </h3>
+                        <div id="auth-container" class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                            <!-- يتم توليد واجهة المستخدم أو نموذج التعليق هنا -->
+                        </div>
+                    </div>
+
+                    <!-- قائمة التعليقات -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-bold">آراء المستخدمين</h3>
+                            <span id="admin-badge" class="hidden bg-red-900/30 text-red-400 text-[10px] px-2 py-1 rounded border border-red-800">لوحة التحكم نشطة</span>
+                        </div>
+                        <div id="comments-display" class="space-y-4">
+                            <!-- يتم توليد التعليقات هنا -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- حاوية الإشعارات -->
+    <div id="toast-container"></div>
+
+
+    <!-- Amazon-like Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-10">
+        <div class="max-w-screen-xl mx-auto px-4">
+            <div class="flex flex-col md:grid md:grid-cols-2 gap-8 mb-8 border-b border-gray-700 pb-8 text-right">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-4 italic">تعرف علينا</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="text-gray-400 font-bold leading-relaxed">نوفر جميع البرامج بشكل موثوق ومن مصادر موثوقة ورسمية.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-4">تواصل معنا</h4>
+                    <div class="flex items-center gap-6 text-sm">
+                        <a href="#" class="hover:text-orange-400 transition flex items-center"><i class="fa-brands fa-facebook ml-2"></i> فيسبوك</a>
+                        <a href="#" class="hover:text-orange-400 transition flex items-center"><i class="fa-brands fa-telegram ml-2"></i> تيليجرام</a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center text-sm text-gray-500">
+                &copy; 2026 متجر عبيده عامر للبرامج. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ربط محرك التحكم البرمجي التفاعلي خالي الأخطاء -->
+    <script src="index.js"></script>
+    
+    <script>
+        // حماية الواجهة: منع النقر الأيمن وتعطيل اختصارات أدوات المطورين
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode == 123) return false; // F12
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) return false; // Ctrl+Shift+I/J
+            if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U (View Source)
+        });
+
+        // تشويه مخرجات الكونسول للمتطفلين
+        console.log("%cتنبيه أمني!", "color: red; font-size: 30px; font-weight: bold;");
+        console.log("%cهذه المنطقة مخصصة للمطورين فقط. محاولة العبث هنا قد تؤدي لحظر جهازك نهائياً.", "color: white; font-size: 16px;");
+    </script>
+</body>
+</html>
