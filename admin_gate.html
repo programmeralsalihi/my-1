@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>بوابة عبيدة السرية</title>
+    <style>
+        body { background: #020617; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .gate-box { background: #0f172a; padding: 40px; border-radius: 20px; border: 2px solid #f97316; text-align: center; box-shadow: 0 0 30px rgba(249, 115, 22, 0.3); }
+        input { display: block; width: 100%; margin: 20px 0; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; text-align: center; }
+        button { background: #f97316; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #ea580c; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <div class="gate-box">
+        <h2 style="color: #f97316; margin-bottom: 5px;">لوحة تحكم عبيدة</h2>
+        <p style="color: #94a3b8; font-size: 14px;">أدخل كلمة السر لفتح الصلاحيات في الموقع</p>
+        <input type="password" id="pass" placeholder="••••••••">
+        <button onclick="openAdmin()">دخول المسؤول</button>
+    </div>
+
+    <script>
+        function openAdmin() {
+            const pass = document.getElementById('pass').value;
+            if (pass === "20obaida44") {
+                // توجيه آمن مع تمرير توكن الإدارة لمرة واحدة في الجلسة
+                const projectUrl = "../موقعي/index.html"; 
+                window.location.href = projectUrl + "?admin_gate_key=" + pass;
+            } else {
+                alert("كلمة السر خاطئة!");
+            }
+        }
+    </script>
+</body>
+</html>
